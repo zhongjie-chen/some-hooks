@@ -1,0 +1,72 @@
+import { Meta } from "@storybook/addon-docs";
+import UseUpdateDemo from "../../demo/UseUpdateDemo";
+
+<Meta title="Hooks/useUpdate" />
+
+# useUpdate
+
+返回 update 函数，调用时候渲染该组件。
+
+# usePrevious
+
+传入一个数据，返回上一次渲染的该数据。
+
+<UseUpdateDemo />
+
+```jsx
+import { useEffect, useRef } from "react";
+import useUpdate from "../hooks/useUpdate";
+import usePrevious from "../hooks/usePrevious";
+
+const UseUpdateDemo = () => {
+  const update = useUpdate();
+  const ref = useRef(0);
+  const previous = usePrevious(ref.current);
+  useEffect(() => {
+    ref.current = ref.current + 1;
+  });
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          update();
+        }}
+      >
+        update
+      </button>
+      <div>current: {ref.current}</div>
+      <div>previous: {previous}</div>
+    </div>
+  );
+};
+
+export default UseUpdateDemo;
+```
+### useUpdate
+```jsx
+import { useReducer } from "react";
+
+const useUpdate = () => {
+  const [ignore, update] = useReducer((count) => {
+    return count + 1;
+  }, 0);
+  return update;
+};
+
+export default useUpdate;
+```
+### usePrevious
+```jsx
+import { useEffect, useRef } from "react";
+
+const usePrevious = (val) => {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = val;
+  });
+  return ref.current;
+};
+
+export default usePrevious;
+```
